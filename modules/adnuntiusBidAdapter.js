@@ -124,7 +124,7 @@ export const spec = {
       // maxDeals controls how many deals we should return with the response.
       // The highest bidding deals will be returned, and only one bid per deal ID is allowed.
       // The deals are returned in the "deals" array of the response, and if maxDeals is > 0
-      // in the request then there will be NO deals included in with the other bids in the "bids" array.
+      // in the request then there will be NO deals included in with the other bids in the "ads" array.
       const adUnit = { ...targeting, auId: bid.params.auId, targetId: bid.bidId, maxDeals: 4 }
       if (bid.mediaTypes && bid.mediaTypes.banner && bid.mediaTypes.banner.sizes) adUnit.dimensions = bid.mediaTypes.banner.sizes
       networks[network].adUnits.push(adUnit);
