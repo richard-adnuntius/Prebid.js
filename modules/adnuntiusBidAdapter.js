@@ -121,7 +121,11 @@ export const spec = {
       networks[network].adUnits = networks[network].adUnits || [];
       if (bidderRequest && bidderRequest.refererInfo) networks[network].context = bidderRequest.refererInfo.page;
       if (adnMeta) networks[network].metaData = adnMeta;
-      const adUnit = { ...targeting, auId: bid.params.auId, targetId: bid.bidId }
+      // maxDeals controls how many deals we should return with the response.
+      // The highest bidding deals will be returned, and only one bid per deal ID is allowed.
+      // The deals are returned in the "deals" array of the response, and if maxDeals is > 0
+      // in the request then there will be NO deals included in with the other bids in the "bids" array.
+      const adUnit = { ...targeting, auId: bid.params.auId, targetId: bid.bidId, maxDeals: 4 }
       if (bid.mediaTypes && bid.mediaTypes.banner && bid.mediaTypes.banner.sizes) adUnit.dimensions = bid.mediaTypes.banner.sizes
       networks[network].adUnits.push(adUnit);
     }
@@ -147,6 +151,9 @@ export const spec = {
   interpretResponse: function (serverResponse, bidRequest) {
     const adUnits = serverResponse.body.adUnits;
     const bidResponsesById = adUnits.reduce((response, adUnit) => {
+      if ((adUnit.deals || []).length > 0) {
+        // Do something with the deals here
+      }
       if (adUnit.matchedAdCount >= 1) {
         const ad = adUnit.ads[0];
         const effectiveCpm = (ad.bid) ? ad.bid.amount * 1000 : 0;
